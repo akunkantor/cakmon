@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Sistem Keuangan</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2ecc71">
+
+<style>
+body{
+  font-family: 'Segoe UI', sans-serif;
+  background:#eef2f7;
+  margin:0;
+  padding:30px;
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+}
+.card{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.05);
+  margin-bottom:20px;
+}
+button{
+  background:#2ecc71;
+  border:none;
+  padding:12px 18px;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  border:1px solid #ddd;
+  padding:10px;
+  text-align:center;
+}
+th{
+  background:#2ecc71;
+  color:#fff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+<h2>💼 Sistem Keuangan</h2>
+
+<select id="sheet">
+  <option value="SPP">SPP</option>
+  <option value="SPM">SPM</option>
+  <option value="SP2D">SP2D</option>
+</select>
+
+<button onclick="loadData()">Load Data</button>
+
+</div>
+
+<div class="card">
+<div id="result">Klik Load Data</div>
+</div>
+
+</div>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbyQm8B1Pr88oKtSZg2aYhldibMTd1TAp4mGmHwf-auWok8k1a3BPJuVbHdR3lrZNuA/exec";
+
+async function loadData(){
+
+  const sheet = document.getElementById("sheet").value;
+
+  const res = await fetch(API_URL + "?sheet=" + sheet);
+  const data = await res.json();
+
+  if(!data || data.length <= 1){
+    document.getElementById("result").innerHTML = "Tidak ada data";
+    return;
+  }
+
+  let html = "<table><tr>";
+
+  data[0].forEach(h => html += "<th>"+h+"</th>");
+  html += "</tr>";
+
+  for(let i=1;i<data.length;i++){
+    html += "<tr>";
+    data[i].forEach(c => html += "<td>"+c+"</td>");
+    html += "</tr>";
+  }
+
+  html += "</table>";
+
+  document.getElementById("result").innerHTML = html;
+}
+
+/* PWA */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+
+</script>
+
+</body>
+</html>
